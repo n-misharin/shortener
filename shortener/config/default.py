@@ -60,3 +60,7 @@ class DefaultSettings(BaseSettings):
         return "postgresql+asyncpg://{user}:{password}@{host}:{port}/{database}".format(
             **self.database_settings,
         )
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"

@@ -13,7 +13,7 @@ class URLStorage(DeclarativeBase):
         UUID(as_uuid=True),
         primary_key=True,
         server_default=func.gen_random_uuid(),
-        doc="",
+        doc="Unique id",
     )
 
     long_url = Column(
@@ -22,7 +22,7 @@ class URLStorage(DeclarativeBase):
         nullable=False,
         index=True,
         unique=True,
-        doc="",
+        doc="Long URL",
     )
 
     short_url = Column(
@@ -31,5 +31,5 @@ class URLStorage(DeclarativeBase):
         nullable=False,
         index=True,
         unique=True,
-        doc="",
+        doc="Suffix of short URL",
     )
