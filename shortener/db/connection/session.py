@@ -33,4 +33,5 @@ async def get_session() -> AsyncSession:
 
 __all__ = [
     "get_session",
+    "SessionManager",
 ]

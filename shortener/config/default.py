@@ -61,6 +61,15 @@ class DefaultSettings(BaseSettings):
             **self.database_settings,
         )
 
+    @property
+    def database_uri_sync(self) -> str:
+        """
+        Get uri for connection with database.
+        """
+        return "postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}".format(
+            **self.database_settings,
+        )
+
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
