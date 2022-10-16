@@ -1,4 +1,3 @@
-import asyncio
 import os
 from types import SimpleNamespace
 from uuid import uuid4
@@ -18,18 +17,6 @@ from shortener.config import get_settings
 from shortener.db.connection.session import SessionManager
 
 from tests.utils import make_alembic_config
-
-
-# @pytest.fixture(scope="session")
-# def event_loop():
-#     """
-#     Creates event loop for tests.
-#     """
-#     policy = asyncio.get_event_loop_policy()
-#     loop = policy.new_event_loop()
-#
-#     yield loop
-#     loop.close()
 
 
 @pytest.fixture
@@ -84,7 +71,7 @@ async def database(
         manager: SessionManager = SessionManager()
 ) -> Session:
     """
-    Returns a class object with which you can create a new session to connect to the database.
+    Возвращает сеанс подключения к БД.
     """
     manager.refresh()
     session_maker = SessionManager().get_session_maker()
@@ -95,7 +82,7 @@ async def database(
 @pytest.fixture
 def client(migrated_postgres, manager: SessionManager = SessionManager()) -> AsyncClient:
     """
-    Returns a client that can be used to interact with the application.
+    Возвращает тестовый клиент приложения.
     """
     with TestClient(create_app()) as client:
         yield client

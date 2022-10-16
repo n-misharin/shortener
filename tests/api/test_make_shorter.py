@@ -5,7 +5,7 @@ from url_normalize import url_normalize
 class TestMakeShorterEndpoint:
     def test_add_new_url(self, client):
         data = {
-            "long_url": "http://yandex.ru/"
+            "long_url": "https://fastapi.tiangolo.com/"
         }
         response = client.post(
             "/api/v1/link/make_shorter",
