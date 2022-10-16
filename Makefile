@@ -24,7 +24,7 @@ open_db:
 	docker exec -it $(DB_CONTAINER_NAME) psql -d $(POSTGRES_DB) -U $(POSTGRES_USER)
 
 lint:
-	poetry run python3 -m pylint $(APPLICATION_NAME) test
+	poetry run python -m pylint $(APPLICATION_NAME)
 
 test:
 	poetry run python -m pytest --verbosity=2 --showlocals --log-level=DEBUG

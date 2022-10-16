@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from uvicorn import run
 
 from shortener.config import get_settings
 from shortener.config.default import DefaultSettings
