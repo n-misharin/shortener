@@ -16,3 +16,15 @@ class TestMakeShorterEndpoint:
         assert "id" in response.json().keys()
         assert url_normalize(response.json()["long_url"]) == data["long_url"]
 
+    def test_invalid_url(self, client):
+        data = {
+            "long_url": "Hello"
+        }
+        response = client.post(
+            "/api/v1/link/make_shorter",
+            json=data
+        )
+        assert response.status_code == 400
+
+
+
