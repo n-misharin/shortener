@@ -24,7 +24,7 @@ class TestMakeShorterEndpoint:
             "/api/v1/link/make_shorter",
             json=data
         )
-        assert response.status_code == 400
+        assert response.status_code == 422
 
 
 
