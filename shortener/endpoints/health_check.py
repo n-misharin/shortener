@@ -6,9 +6,7 @@ from starlette import status
 from shortener.db.connection.session import get_session
 from shortener.db.models.url import URLStorage
 
-api_router = APIRouter(
-    prefix="/health_check",
-)
+api_router = APIRouter(prefix="/health_check")
 
 
 @api_router.get(
@@ -19,7 +17,6 @@ async def health_check(
         _: Request,
         session: AsyncSession = Depends(get_session),
 ):
-    # async with session as db:
     query = select(URLStorage)
     url = await session.execute(query)
     res = url.first()[0]
