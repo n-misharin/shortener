@@ -7,7 +7,10 @@ from shortener.endpoints import routes_list
 
 def bind_routes(application: FastAPI, settings: DefaultSettings) -> None:
     for route in routes_list:
-        application.include_router(route, prefix=settings.PATH_PREFIX)
+        if "api" in route.tags:
+            application.include_router(route, prefix=settings.PATH_PREFIX)
+        else:
+            application.include_router(route)
 
 
 def create_app() -> FastAPI:
@@ -24,16 +27,3 @@ def create_app() -> FastAPI:
     application.state.settings = settings
 
     return application
-
-
-# if __name__ == "__main__":
-#     app = create_app()
-#     app_settings = get_settings()
-#     run(
-#         "shortener.__main__:create_app",
-#         host=app_settings.APP_HOST,
-#         port=app_settings.APP_PORT,
-#         reload=True,
-#         reload_dirs=["shortener", "tests"],
-#         log_level="debug",
-#     )

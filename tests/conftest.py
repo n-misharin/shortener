@@ -1,3 +1,4 @@
+import asyncio
 import os
 from types import SimpleNamespace
 from uuid import uuid4
@@ -17,6 +18,19 @@ from shortener.config import get_settings
 from shortener.db.connection.session import SessionManager
 
 from tests.utils import make_alembic_config
+
+
+@pytest.fixture(scope="module")
+def event_loop():
+    """
+    Creates event loop for tests.
+    """
+    policy = asyncio.get_event_loop_policy()
+    loop = policy.new_event_loop()
+
+    yield loop
+    # loop.run_until_complete(asyncio.sleep(0.250))
+    loop.close()
 
 
 @pytest.fixture
@@ -80,9 +94,15 @@ async def database(
 
 
 @pytest.fixture
-def client(migrated_postgres, manager: SessionManager = SessionManager()) -> AsyncClient:
+async def client(migrated_postgres, manager: SessionManager = SessionManager()) -> AsyncClient:
     """
     Возвращает тестовый клиент приложения.
     """
-    with TestClient(create_app()) as client:
-        yield client
+    app = create_app()
+    manager.refresh()  # без вызова метода изменения конфига внутри фикстуры postgres не подтягиваются в класс
+    # utils.get_page_title = Mock(return_value="page_name")
+    async with AsyncClient(app=app, base_url="http://test") as app_client:
+        yield app_client
+
+    # with TestClient(create_app()) as client:
+    #     yield client

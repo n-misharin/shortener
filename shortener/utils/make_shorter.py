@@ -9,8 +9,7 @@ from shortener.schemas.make_shorter import MakeShorterRequest
 
 
 async def make_short(session: AsyncSession, url: MakeShorterRequest) -> URLStorage:
-    query = select(URLStorage).where(URLStorage.long_url == url.long_url)
-    exist = await session.scalar(query)
+    exist = await get_url_by_long(session, url.long_url)
     if exist:
         return exist
 
@@ -31,3 +30,8 @@ async def make_short(session: AsyncSession, url: MakeShorterRequest) -> URLStora
     await session.refresh(new_url)
 
     return new_url
+
+
+async def get_url_by_long(session: AsyncSession, long_url: str) -> URLStorage | None:
+    query = select(URLStorage).where(URLStorage.long_url == long_url)
+    return await session.scalar(query)

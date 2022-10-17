@@ -25,7 +25,11 @@ SQLAlchemy-Utils = "^0.38.3"
 ConfigArgParse = "^1.5.3"
 requests = "^2.28.1"
 pytest-asyncio = "^0.19.0"
+pytest-aiohttp = "^1.0.4"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
