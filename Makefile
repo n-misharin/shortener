@@ -12,7 +12,7 @@ env:
 	echo "POSTGRES_HOST=localhost" >> .env
 	echo "POSTGRES_PORT=5432" >> .env
 	echo "APP_PORT=8000" >> .env
-	echo "APP_HOST=127.0.0.1" >> .env
+	echo "APP_HOST=http://127.0.0.1" >> .env
 
 db:
 	docker-compose up -d
