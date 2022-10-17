@@ -21,17 +21,18 @@ async def make_short(session: AsyncSession, url: MakeShorterRequest) -> URLStora
         if not exist:
             break
 
-    new_url = URLStorage(
-        long_url=url.long_url,
-        short_url=suffix,
-    )
-    session.add(new_url)
-    await session.commit()
-    await session.refresh(new_url)
-
-    return new_url
+    return await add_long_url(session, url.long_url, suffix)
 
 
 async def get_url_by_long(session: AsyncSession, long_url: str) -> URLStorage | None:
     query = select(URLStorage).where(URLStorage.long_url == long_url)
     return await session.scalar(query)
+
+
+async def add_long_url(session: AsyncSession, long_url: str, suffix: str) -> URLStorage:
+    new_url = URLStorage(long_url=long_url, short_url=suffix)
+    # TODO: exception
+    session.add(new_url)
+    await session.commit()
+    await session.refresh(new_url)
+    return new_url

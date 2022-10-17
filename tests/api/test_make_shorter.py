@@ -1,8 +1,7 @@
 import pytest
-from sqlalchemy import select
 from url_normalize import url_normalize
+from starlette import status
 
-from shortener.db.models import URLStorage
 from shortener.utils.make_shorter import get_url_by_long
 
 
@@ -20,13 +19,18 @@ class TestMakeShorterEndpoint:
         ]
     )
     async def test_add_new_url(self, client, database, url):
-        res = await get_url_by_long(database, url)
-        assert res is None
+        db_url = await get_url_by_long(database, url)
+        assert db_url is None
+
         response = await client.post(
             TestMakeShorterEndpoint.get_url(),
             json={"long_url": url}
         )
-        assert response.status_code == 200
+
+        db_url = await get_url_by_long(database, url)
+        assert url_normalize(db_url.long_url) == url
+
+        assert response.status_code == status.HTTP_200_OK
         assert "short_url" in response.json().keys()
         assert "id" in response.json().keys()
         assert url_normalize(response.json()["long_url"]) == url
@@ -38,9 +42,13 @@ class TestMakeShorterEndpoint:
             "asdf/asd/fa/fsd"
         ]
     )
-    async def test_invalid_url(self, client, url):
+    async def test_invalid_url(self, client, database, url):
         response = await client.post(
             "/api/v1/link/make_shorter",
             json={"long_url": url}
         )
-        assert response.status_code == 422
+
+        db_url = await get_url_by_long(database, url)
+        assert db_url is None
+
+        assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY

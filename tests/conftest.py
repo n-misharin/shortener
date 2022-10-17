@@ -11,8 +11,6 @@ from alembic.config import Config
 from sqlalchemy_utils import create_database, database_exists, drop_database
 from sqlalchemy.orm import Session
 
-from fastapi.testclient import TestClient
-
 from shortener.__main__ import create_app
 from shortener.config import get_settings
 from shortener.db.connection.session import SessionManager
@@ -20,7 +18,7 @@ from shortener.db.connection.session import SessionManager
 from tests.utils import make_alembic_config
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def event_loop():
     """
     Creates event loop for tests.
@@ -29,7 +27,6 @@ def event_loop():
     loop = policy.new_event_loop()
 
     yield loop
-    # loop.run_until_complete(asyncio.sleep(0.250))
     loop.close()
 
 
@@ -99,10 +96,6 @@ async def client(migrated_postgres, manager: SessionManager = SessionManager()) 
     Возвращает тестовый клиент приложения.
     """
     app = create_app()
-    manager.refresh()  # без вызова метода изменения конфига внутри фикстуры postgres не подтягиваются в класс
-    # utils.get_page_title = Mock(return_value="page_name")
+    manager.refresh()
     async with AsyncClient(app=app, base_url="http://test") as app_client:
         yield app_client
-
-    # with TestClient(create_app()) as client:
-    #     yield client
