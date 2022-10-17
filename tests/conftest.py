@@ -16,12 +16,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from shortener.__main__ import create_app
 from shortener.config import get_settings
 from shortener.db.connection.session import SessionManager
-from shortener.utils import url_from_suffix
 
 from tests.utils import make_alembic_config
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def event_loop():
     """
     Creates event loop for tests.

@@ -20,7 +20,7 @@ def generate_random_suffix(length: int) -> str:
 
 
 async def generate_not_exist_url(session: AsyncSession, length: int) -> str:
-    # TODO: generate string
+    # TODO: new algorithm
     while True:
         suffix = generate_random_suffix(length)
         exist_url = await get_url_by_suffix(session, suffix)
@@ -36,7 +36,7 @@ async def make_short(session: AsyncSession, long_url: str) -> URLStorage:
 
     suffix = await generate_not_exist_url(session, BASE_SUFFIX_LENGTH)
 
-    return await add_long_url(session, long_url, suffix)
+    return await add_url(session, long_url, suffix)
 
 
 async def make_vip(session: AsyncSession, long_url: str, suffix: str) -> URLStorage:
@@ -48,7 +48,7 @@ async def make_vip(session: AsyncSession, long_url: str, suffix: str) -> URLStor
     if exist_short:
         raise ExistURLException(f"URL with suffix=`{suffix}` already exist")
 
-    return await add_long_url(session, long_url, suffix)
+    return await add_url(session, long_url, suffix)
 
 
 async def get_url_by_long(session: AsyncSession, long_url: str) -> URLStorage | None:
@@ -61,7 +61,8 @@ async def get_url_by_suffix(session: AsyncSession, suffix: str) -> URLStorage | 
     return await session.scalar(query)
 
 
-async def add_long_url(session: AsyncSession, long_url: str, suffix: str) -> URLStorage:
+async def add_url(session: AsyncSession, long_url: str, suffix: str) -> URLStorage:
+    # TODO: URL validation and suffix validation
     new_url = URLStorage(long_url=long_url, short_url=suffix)
     try:
         session.add(new_url)

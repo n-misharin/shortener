@@ -1,7 +1,6 @@
 import pytest
 from starlette import status
 
-from shortener.schemas.make_shorter import MakeShorterRequest
 from shortener.utils.make_shorter import make_short
 
 
