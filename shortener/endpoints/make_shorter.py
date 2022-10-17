@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
 from shortener.db.connection.session import get_session
 from shortener.schemas.make_shorter import MakeShorterRequest, ShortingURL
-from shortener.utils.make_shorter import make_short
+from shortener.utils.make_shorter import make_short, make_vip, ExistURLException
 
 api_router = APIRouter(prefix="/link", tags=["api"])
 
@@ -18,5 +18,12 @@ async def make_shorter(
         data: MakeShorterRequest,
         session: AsyncSession = Depends(get_session),
 ):
-    result = await make_short(session, data)
-    return result
+    if data.suffix is None:
+        return await make_short(session, data.long_url)
+    try:
+        return await make_vip(session, data.long_url, data.suffix)
+    except ExistURLException as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )

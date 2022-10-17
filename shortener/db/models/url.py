@@ -1,4 +1,4 @@
-from sqlalchemy import Column, TEXT
+from sqlalchemy import Column, TEXT, INTEGER
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 
@@ -33,3 +33,11 @@ class URLStorage(DeclarativeBase):
         unique=True,
         doc="Suffix of short URL",
     )
+
+    # click_count = Column(
+    #     "click_count",
+    #     INTEGER,
+    #     nullable=False,
+    #     default=0,
+    #     doc="The number of clicks on the link"
+    # )

@@ -1,11 +1,14 @@
+from typing import Optional
+
 from pydantic import BaseModel, HttpUrl, Field, validator, UUID4
 from url_normalize import url_normalize
 
-from shortener.utils.url_from_suffix import url_from_suffix
+from shortener.utils import url_from_suffix
 
 
 class MakeShorterRequest(BaseModel):
     long_url: HttpUrl = Field(title="URL to be shortened")
+    suffix: Optional[str] = Field(title="Suffix for shor URL", default=None)
 
     @validator("long_url")
     def normalize_link(cls, link: HttpUrl):

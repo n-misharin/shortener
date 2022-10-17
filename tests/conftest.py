@@ -1,3 +1,5 @@
+from unittest.mock import Mock
+
 import asyncio
 import os
 from types import SimpleNamespace
@@ -9,24 +11,25 @@ from alembic.command import upgrade
 from alembic.config import Config
 
 from sqlalchemy_utils import create_database, database_exists, drop_database
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from shortener.__main__ import create_app
 from shortener.config import get_settings
 from shortener.db.connection.session import SessionManager
+from shortener.utils import url_from_suffix
 
 from tests.utils import make_alembic_config
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def event_loop():
     """
     Creates event loop for tests.
     """
     policy = asyncio.get_event_loop_policy()
     loop = policy.new_event_loop()
-
     yield loop
+
     loop.close()
 
 
@@ -80,7 +83,7 @@ async def database(
         postgres,
         migrated_postgres,
         manager: SessionManager = SessionManager()
-) -> Session:
+) -> AsyncSession:
     """
     Возвращает сеанс подключения к БД.
     """
@@ -97,5 +100,6 @@ async def client(migrated_postgres, manager: SessionManager = SessionManager()) 
     """
     app = create_app()
     manager.refresh()
-    async with AsyncClient(app=app, base_url="http://test") as app_client:
+    server_url = "http://test"
+    async with AsyncClient(app=app, base_url=server_url) as app_client:
         yield app_client

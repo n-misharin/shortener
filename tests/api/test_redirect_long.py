@@ -18,9 +18,6 @@ class TestRedirectLong:
         ]
     )
     async def test_valid_url_redirect(self, database, client, url):
-        db_url = await make_short(
-            database,
-            MakeShorterRequest(long_url=url)
-        )
+        db_url = await make_short(database, url)
         response = await client.get(TestRedirectLong.get_url(db_url.short_url))
         assert response.status_code == status.HTTP_307_TEMPORARY_REDIRECT
