@@ -22,8 +22,8 @@ async def make_shorter(
         return await make_short(session, data.long_url)
     try:
         return await make_vip(session, data.long_url, data.suffix)
-    except ExistURLException as e:
+    except ExistURLException as exist_exc:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        )
+            detail="Suffix is busy"
+        ) from exist_exc

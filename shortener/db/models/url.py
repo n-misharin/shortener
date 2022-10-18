@@ -1,4 +1,4 @@
-from sqlalchemy import Column, TEXT, INTEGER
+from sqlalchemy import Column, TEXT
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 

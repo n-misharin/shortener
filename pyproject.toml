@@ -33,3 +33,24 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+
+# LINTERS
+
+[tool.pylint.master]
+extension-pkg-allow-list = ["pydantic"]
+
+[tool.pylint.format]
+max-line-length = 120
+
+#[tool.pylint.basic]
+#good-names = ["db"]
+
+[tool.pylint."MESSAGES CONTROL"]
+disable = [
+  "C0114",  # missing-module-docstring
+  "C0116",  # missing-function-docstring
+  "R0903",  # too-few-public-methods (for sqlalchemy tables and pydantic classes)
+  "C0115",  # missing-class-docstring (for api routes)
+  "W0621",  # Redefining name from outer scope (for fixtures)
+  "W0613",  # Unused argument (for fixtures)
+]

@@ -68,7 +68,7 @@ async def add_url(session: AsyncSession, long_url: str, suffix: str) -> URLStora
         session.add(new_url)
         await session.commit()
         await session.refresh(new_url)
-    except IntegrityError:
+    except IntegrityError as exception:
         raise ExistURLException(
-            f"URL with suffix=`{suffix}` or long_url=`{long_url}` already exist")
+            f"URL with suffix=`{suffix}` or long_url=`{long_url}` already exist") from exception
     return new_url

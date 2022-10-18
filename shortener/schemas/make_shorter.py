@@ -7,15 +7,17 @@ from shortener.utils import url_from_suffix
 
 
 class MakeShorterRequest(BaseModel):
+    # pylint: disable=E0213
     long_url: HttpUrl = Field(title="URL to be shortened")
     suffix: Optional[str] = Field(title="Suffix for shor URL", default=None)
 
     @validator("long_url")
-    def normalize_link(cls, link: HttpUrl):
+    def normalize_link(cls, link: HttpUrl): # noqa
         return url_normalize(link)
 
 
 class ShortingURL(BaseModel):
+    # pylint: disable=E0213
     id: UUID4
     long_url: HttpUrl = Field(title="URL to be shortened")
     short_url: str = Field(title="Short URL")
